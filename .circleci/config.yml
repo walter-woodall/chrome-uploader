@@ -3,6 +3,7 @@ jobs:
   build:
     working_directory: ~/tidepool-org/chrome-uploader
     parallelism: 1
+    shell: /bin/bash --login
     # CircleCI 2.0 does not support environment variables that refer to each other the same way as 1.0 did.
     # If any of these refer to each other, rewrite them so that they don't or see https://circleci.com/docs/2.0/env-vars/#interpolating-environment-variables-to-set-other-environment-variables .
     environment:
@@ -17,8 +18,16 @@ jobs:
     - run: echo 'export PATH=${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin' >> $BASH_ENV
     - restore_cache:
         key: dependency-cache-{{ checksum "package.json" }}
-    - run: circleci-install nodejs 8.2.1
-    - run: echo 'export PATH=/opt/circleci/nodejs/v8.2.1/bin:/opt/circleci/nodejs/v8.2.1/bin:$PATH' >> $BASH_ENV
+    - run:
+        name: Install node@8.2.1
+        command: |
+          set +e
+          curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
+          echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
+          echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
+          echo $BASH_ENV
+          nvm install v8.2.1
+          nvm alias default v8.2.1
     - run: node -v
     - run: curl -o- -L https://yarnpkg.com/install.sh | bash
     - run: yarn config set cache-folder ~/.cache/yarn
