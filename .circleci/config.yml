@@ -3,12 +3,12 @@ jobs:
   build:
     working_directory: ~/tidepool-org/chrome-uploader
     parallelism: 1
-    shell: /bin/bash --login
     # CircleCI 2.0 does not support environment variables that refer to each other the same way as 1.0 did.
     # If any of these refer to each other, rewrite them so that they don't or see https://circleci.com/docs/2.0/env-vars/#interpolating-environment-variables-to-set-other-environment-variables .
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
       CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+      BASH_ENV: "~/.bashrc"
     # The `macos` block requests that builds will run on a machine running
     # macOS with the specified version of Xcode installed
     macos:
