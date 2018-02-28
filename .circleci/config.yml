@@ -19,15 +19,14 @@ jobs:
     - restore_cache:
         key: dependency-cache-{{ checksum "package.json" }}
     - run:
-        name: Install node@8.2.1
+        name: Install npm
         command: |
           set +e
           curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
           echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
           echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
-          echo $BASH_ENV
-          nvm install v8.2.1
-          nvm alias default v8.2.1
+    - run: nvm install v8.2.1
+    - run: nvm alias default v8.2.1
     - run: node -v
     - run: curl -o- -L https://yarnpkg.com/install.sh | bash
     - run: yarn config set cache-folder ~/.cache/yarn
